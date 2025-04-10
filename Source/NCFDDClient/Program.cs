@@ -57,7 +57,6 @@ while (publicIp == null)
 {
     Logger.LogError("Public IPv6 not detected.");
     Thread.Sleep(ipCheckInterval * 1000);
-    await Task.Delay(ipCheckInterval);
     publicIp = Helper.GetPublicIPv6();
 }
 

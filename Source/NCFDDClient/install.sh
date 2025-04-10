@@ -34,7 +34,7 @@ else
 		fi
 
 		if test -f $service_file; then
-			read -p "The service file is already exist, do you want to ovewrite it? [y/N]: " input
+			read -p "The service file is already exist, do you want to ovewrite it? [y/N] " input
 			if [[ "$input" =~ ^[Yy]$ ]]; then
 				rm $service_file
 			else
@@ -57,7 +57,7 @@ else
 
 		env_file="${script_dir}/.env"
 		if test -f $env_file; then
-			read -p "The .env file is already exist, do you want to ovewrite it? [y/N]: " input
+			read -p "The .env file is already exist, do you want to ovewrite it? [y/N] " input
 			if [[ "$input" =~ ^[Yy]$ ]]; then
 				rm $env_file
 				read -p "Enter CloudFlare Zone ID: " input
