@@ -46,7 +46,7 @@
         <mxCell id="aa-se_46TZ2RqToI2Ibn-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="CZ5TwC8nA-oCNelCYCaE-17" target="CZ5TwC8nA-oCNelCYCaE-21" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="CZ5TwC8nA-oCNelCYCaE-17" value="Verify CloudFlare API credentials" style="rounded=0;whiteSpace=wrap;html=1;glass=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+        <mxCell id="CZ5TwC8nA-oCNelCYCaE-17" value="Verify CloudFlare API Token" style="rounded=0;whiteSpace=wrap;html=1;glass=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="480" y="400" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="jLwTOR-OtjL0AE77aJch-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="CZ5TwC8nA-oCNelCYCaE-18" target="CZ5TwC8nA-oCNelCYCaE-54" edge="1">
@@ -66,7 +66,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="CZ5TwC8nA-oCNelCYCaE-21" value="Valid&lt;div&gt;credential?&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+        <mxCell id="CZ5TwC8nA-oCNelCYCaE-21" value="Valid&lt;div&gt;Token?&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
           <mxGeometry x="490" y="480" width="100" height="80" as="geometry" />
         </mxCell>
         <mxCell id="aa-se_46TZ2RqToI2Ibn-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="CZ5TwC8nA-oCNelCYCaE-25" target="CZ5TwC8nA-oCNelCYCaE-34" edge="1">
@@ -114,7 +114,7 @@
         <mxCell id="CZ5TwC8nA-oCNelCYCaE-51" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="CZ5TwC8nA-oCNelCYCaE-48" target="CZ5TwC8nA-oCNelCYCaE-50" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="CZ5TwC8nA-oCNelCYCaE-48" value="Get &lt;b&gt;sites enabled&amp;nbsp;DNS record&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+        <mxCell id="CZ5TwC8nA-oCNelCYCaE-48" value="Get nginx&amp;nbsp;&lt;b&gt;sites enabled&amp;nbsp;DNS record&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="160" y="600" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="jLwTOR-OtjL0AE77aJch-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="CZ5TwC8nA-oCNelCYCaE-50" target="CZ5TwC8nA-oCNelCYCaE-18" edge="1">

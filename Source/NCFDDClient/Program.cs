@@ -37,7 +37,7 @@ Logger.LogInfo($"IP check interval: {ipCheckInterval}s");
 
 #region Get nginx sites enabled
 
-var sitesEnabledList = Helper.GetSitesEnabledDomains();
+var sitesEnabledList = Helper.GetNginxSitesEnabledDomains();
 if (sitesEnabledList.Count > 0)
 {
     Logger.LogInfo($"Nginx sites-enabled domain(s): {string.Join(", ", sitesEnabledList)}");

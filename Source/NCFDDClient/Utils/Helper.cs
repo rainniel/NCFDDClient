@@ -5,29 +5,23 @@ namespace NCFDDClient.Utils
 {
     internal static class Helper
     {
-        private const string NginxPath = "/etc/nginx";
-
-        public static List<string> GetSitesEnabledDomains()
+        public static List<string> GetNginxSitesEnabledDomains()
         {
-            var sitesEnabledPath = Path.Combine(NginxPath, "sites-enabled");
-            var sitesAvailablePath = Path.Combine(NginxPath, "sites-available");
+            var sitesEnabledPath = "/etc/nginx/sites-enabled";
 
-            if (Directory.Exists(sitesEnabledPath) && Directory.Exists(sitesAvailablePath))
+            if (Directory.Exists(sitesEnabledPath))
             {
-                var files = Directory.GetFiles(sitesEnabledPath).ToList();
-                if (files.Count > 0)
+                var files = Directory.GetFiles(sitesEnabledPath);
+                if (files.Length > 0)
                 {
                     var domainList = new HashSet<string>();
-                    files = files.Select(file => Path.GetFileName(file)).ToList();
-
                     Regex serverNameRegex = new Regex(@"^\s*server_name\s+(.+?);", RegexOptions.IgnoreCase);
 
                     foreach (var file in files)
                     {
-                        var configFile = Path.Combine(sitesAvailablePath, file);
-                        if (File.Exists(configFile))
+                        if (File.Exists(file))
                         {
-                            string[] configLines = File.ReadAllLines(configFile);
+                            string[] configLines = File.ReadAllLines(file);
                             foreach (var line in configLines)
                             {
                                 if (line.Trim().StartsWith('#')) continue;
