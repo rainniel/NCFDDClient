@@ -37,7 +37,7 @@ Logger.LogInfo($"IP check interval: {ipCheckInterval}s");
 
 #region Get nginx sites enabled
 
-var sitesEnabledList = Helper.GetNginxSitesEnabledDomains();
+var sitesEnabledList = Nginx.GetSitesEnabledDomains();
 if (sitesEnabledList.Count > 0)
 {
     Logger.LogInfo($"Nginx sites-enabled domain(s): {string.Join(", ", sitesEnabledList)}");
@@ -52,13 +52,15 @@ else
 
 #region Get public IPv6
 
-var publicIp = Helper.GetPublicIPv6();
-while (publicIp == null)
+var publicIP = Network.GetPublicIPv6();
+while (publicIP == null)
 {
     Logger.LogError("Public IPv6 not detected.");
     Thread.Sleep(ipCheckInterval * 1000);
-    publicIp = Helper.GetPublicIPv6();
+    publicIP = Network.GetPublicIPv6();
 }
+
+Logger.LogInfo($"Public IPv6: {publicIP}");
 
 #endregion
 
@@ -92,8 +94,7 @@ while (recordList.Count == 0)
 
 #region Monitor IPv6 & update DNS record
 
-Logger.LogInfo($"Public IPv6: {publicIp}");
-CloudFlareAPI.UpdateDNSRecordsIP(recordList, publicIp);
+CloudFlareAPI.UpdateDNSRecordsIP(recordList, publicIP);
 
 Logger.LogInfo("Monitoring public IPv6 change...");
 
@@ -101,12 +102,12 @@ while (true)
 {
     Thread.Sleep(ipCheckInterval * 1000);
 
-    var newIp = Helper.GetPublicIPv6();
-    if (newIp != null)
+    var newIP = Network.GetPublicIPv6();
+    if (newIP != null)
     {
-        if (!newIp.Equals(publicIp, StringComparison.OrdinalIgnoreCase))
+        if (!newIP.Equals(publicIP, StringComparison.OrdinalIgnoreCase))
         {
-            Logger.LogInfo($"Public IPv6 changed to '{publicIp}'.");
+            Logger.LogInfo($"Public IPv6 changed to: {publicIP}");
 
             recordList = CloudFlareAPI.GetDNSRecords(sitesEnabledList);
             while (recordList.Count == 0)
@@ -116,16 +117,15 @@ while (true)
                 recordList = CloudFlareAPI.GetDNSRecords(sitesEnabledList);
             }
 
-            var dnsUpdated = CloudFlareAPI.UpdateDNSRecordsIP(recordList, publicIp);
-
+            var dnsUpdated = CloudFlareAPI.UpdateDNSRecordsIP(recordList, publicIP);
             while (!dnsUpdated)
             {
                 Logger.LogError($"Failed updating AAAA DNS record(s) in CloudFlare. Will try again in {cfRequestInterval}s.");
                 Thread.Sleep(cfRequestInterval * 1000);
-                dnsUpdated = CloudFlareAPI.UpdateDNSRecordsIP(recordList, publicIp);
+                dnsUpdated = CloudFlareAPI.UpdateDNSRecordsIP(recordList, publicIP);
             }
 
-            publicIp = newIp;
+            publicIP = newIP;
         }
     }
     else

@@ -1,13 +1,12 @@
-﻿using System.Net.NetworkInformation;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace NCFDDClient.Utils
 {
-    internal static class Helper
+    internal static class Nginx
     {
-        public static List<string> GetNginxSitesEnabledDomains()
+        public static List<string> GetSitesEnabledDomains()
         {
-            var sitesEnabledPath = "/etc/nginx/sites-enabled";
+            const string sitesEnabledPath = "/etc/nginx/sites-enabled";
 
             if (Directory.Exists(sitesEnabledPath))
             {
@@ -50,28 +49,6 @@ namespace NCFDDClient.Utils
             }
 
             return [];
-        }
-
-        public static string? GetPublicIPv6()
-        {
-            var networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-
-            foreach (var netInterface in networkInterfaces)
-            {
-                var ipProperties = netInterface.GetIPProperties();
-                var ipv6Address = ipProperties.UnicastAddresses.FirstOrDefault(ip => ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6);
-
-                if (ipv6Address != null && !ipv6Address.Address.IsIPv6LinkLocal)
-                {
-                    var ipv6 = ipv6Address.Address.ToString();
-                    if (!ipv6.StartsWith(':'))
-                    {
-                        return ipv6;
-                    }
-                }
-            }
-
-            return null;
         }
     }
 }

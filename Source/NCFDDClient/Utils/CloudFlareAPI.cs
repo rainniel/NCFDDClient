@@ -8,7 +8,6 @@ namespace NCFDDClient.Utils
     {
         private const string BaseURL = "https://api.cloudflare.com/client/v4";
 
-        private static readonly HttpClient _client = new();
         private static string _zoneID = string.Empty;
         private static string _apiToken = string.Empty;
 
@@ -32,7 +31,7 @@ namespace NCFDDClient.Utils
 
             try
             {
-                using var response = _client.SendAsync(httpRequest).Result;
+                using var response = Common.HttpClient.SendAsync(httpRequest).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -45,7 +44,7 @@ namespace NCFDDClient.Utils
             }
             catch (Exception ex)
             {
-                Logger.LogError($"[VerifyApiToken] Request exception: {ex.Message}");
+                Logger.LogError($"[VerifyApiToken] Exception: {ex.Message}");
             }
 
             return false;
@@ -67,7 +66,7 @@ namespace NCFDDClient.Utils
 
             try
             {
-                using var requestResult = _client.SendAsync(httpRequest).Result;
+                using var requestResult = Common.HttpClient.SendAsync(httpRequest).Result;
 
                 if (requestResult.IsSuccessStatusCode)
                 {
@@ -100,7 +99,7 @@ namespace NCFDDClient.Utils
             }
             catch (Exception ex)
             {
-                Logger.LogError($"[GetDNSRecords] Request exception: {ex.Message}");
+                Logger.LogError($"[GetDNSRecords] Exception: {ex.Message}");
             }
 
             return records;
@@ -108,19 +107,21 @@ namespace NCFDDClient.Utils
 
         public static bool UpdateDNSRecordsIP(List<AAAARecord> records, string ip)
         {
-            var updateList = new List<string>();
-            var updateDomainList = new List<string>();
+            var updateList = new List<Tuple<string, string>>();
 
             foreach (var record in records)
             {
                 if (!record.Content.Equals(ip, StringComparison.OrdinalIgnoreCase))
                 {
-                    updateList.Add($"{{\"id\":\"{record.ID}\",\"content\":\"{ip}\"}}");
-                    updateDomainList.Add(record.Name.ToLower());
+                    updateList.Add(new Tuple<string, string>(record.Name.ToLower(), $"{{\"id\":\"{record.ID}\",\"content\":\"{ip}\"}}"));
                 }
             }
 
-            if (updateList.Count > 0)
+            if (updateList.Count == 0)
+            {
+                return true;
+            }
+            else
             {
                 using var httpRequest = new HttpRequestMessage
                 {
@@ -130,17 +131,18 @@ namespace NCFDDClient.Utils
                         { HttpRequestHeader.Authorization.ToString(), $"Bearer {_apiToken}" },
                         { HttpRequestHeader.Accept.ToString(), "application/json" },
                     },
-                    Content = new StringContent($"{{\"patches\":[{string.Join(',', updateList)}]}}")
+                    Content = new StringContent($"{{\"patches\":[{string.Join(',', updateList.Select(i => i.Item2).ToList())}]}}")
                 };
 
                 try
                 {
-                    using var requestResult = _client.SendAsync(httpRequest).Result;
+                    using var requestResult = Common.HttpClient.SendAsync(httpRequest).Result;
 
                     if (requestResult.IsSuccessStatusCode)
                     {
-                        updateDomainList.Sort();
-                        Logger.LogInfo($"CloudFlare updated domain(s): {string.Join(", ", updateDomainList)}");
+                        var domainList = updateList.Select(i => i.Item1).ToList();
+                        domainList.Sort();
+                        Logger.LogInfo($"CloudFlare updated domain(s): {string.Join(", ", domainList)}");
                         return true;
                     }
                     else
@@ -150,16 +152,16 @@ namespace NCFDDClient.Utils
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogError($"[UpdateDNSRecordsIP] Request exception: {ex.Message}");
+                    Logger.LogError($"[UpdateDNSRecordsIP] Exception: {ex.Message}");
                 }
-
             }
 
             return false;
         }
 
-        #region Json object
-        public class ResultItem
+        #region JSON object
+
+        public class DNSRecord
         {
             public string ID { get; set; } = string.Empty;
             public string Name { get; set; } = string.Empty;
@@ -168,8 +170,9 @@ namespace NCFDDClient.Utils
 
         public class ApiResponse
         {
-            public List<ResultItem>? Result { get; set; }
+            public List<DNSRecord>? Result { get; set; }
         }
+
         #endregion
     }
 }
